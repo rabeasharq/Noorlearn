@@ -1,0 +1,6 @@
+{
+  "name": "منظومة نور",
+  "description": "منظومة نور لتحضير دروس اللغة العربية للصفوف 7-9 في اليمن - أداة متكاملة وذكية تدعم استراتيجيات جيل ألفا ومراعاة الفجوة المعرفية",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
