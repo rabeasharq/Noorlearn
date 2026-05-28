@@ -63,6 +63,7 @@ export interface PlanForm {
   subType: string;
   lessonTitle: string;
   bookUnit: string;
+  bookPages?: string;
   day: string;
   period: string;
   date: string;
@@ -72,6 +73,9 @@ export interface PlanForm {
   introType: string;
   alphaStrategy: string;
   classProblems: string[];
+  actualProgress?: 'ahead' | 'on_time' | 'behind';
+  psychState?: 'low_engage' | 'high_energy' | 'fatigue' | 'focus_needed';
+  unexpectedGap?: 'none' | 'prereq_gaps' | 'high_variance' | 'heavy_remedial';
 }
 
 export interface ArabicPlan {
@@ -123,6 +127,12 @@ export interface ArabicPlan {
   challengeRecs: string[];
   references: string[];
   savedAt?: string;
+  remedialPlan?: {
+    title: string;
+    targetGap: string;
+    microPlan: string[];
+    psychActions: string[];
+  };
 }
 
 export const APP_VERSION = "1.0.0";

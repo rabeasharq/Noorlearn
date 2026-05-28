@@ -15,6 +15,7 @@ import HistoryPanel from "./components/HistoryPanel";
 import FeedbackPanel from "./components/FeedbackPanel";
 import GuidePanel from "./components/GuidePanel";
 import PreviewPanel from "./components/PreviewPanel";
+import BackupPanel from "./components/BackupPanel";
 
 import { motion, AnimatePresence } from "motion/react";
 
@@ -51,18 +52,30 @@ export default function App() {
     }
   }, []);
 
-  // Fetch initial profile and items on mount
-  useEffect(() => {
-    // 1. Fetch teacher config values
-    NoorDB.getPref<TeacherProfile>("profile").then(savedProfile => {
+  // Comprehensive data reloader when backup is imported
+  const reloadAllData = useCallback(async () => {
+    try {
+      const savedProfile = await NoorDB.getPref<TeacherProfile>("profile");
       if (savedProfile) {
         setProfileState(savedProfile);
+      } else {
+        setProfileState({
+          teacherName: "",
+          schoolName: "",
+          supervisorName: "",
+          grade: ""
+        });
       }
-    });
-
-    // 2. Query available archived plans
-    refreshPlans();
+      await refreshPlans();
+    } catch (err) {
+      console.error("Failed to reload data on import:", err);
+    }
   }, [refreshPlans]);
+
+  // Fetch initial profile and items on mount
+  useEffect(() => {
+    reloadAllData();
+  }, [reloadAllData]);
 
   // Display toast notice triggers
   const triggerToast = useCallback((msg: string, type: "success" | "error" | "info" = "info") => {
@@ -147,6 +160,7 @@ export default function App() {
     form: "صياغة خطة تحضيرية جديدة",
     history: `الأرشيف ودليل خططي الدراسية (${plans.length})`,
     feedback: "التحليلات ومستوى التنوع التراكمي",
+    backup: "إدارة البيانات والنسخ الاحتياطي للأرشيف",
     guide: "دليل منظومة نور ومناهج اللغة العربية"
   };
 
@@ -232,6 +246,9 @@ export default function App() {
                   />
                 )}
                 {view === "feedback" && <FeedbackPanel plans={plans} />}
+                {view === "backup" && (
+                  <BackupPanel onImportSuccess={reloadAllData} plansCount={plans.length} />
+                )}
                 {view === "guide" && <GuidePanel />}
               </motion.main>
             </AnimatePresence>

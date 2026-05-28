@@ -209,6 +209,43 @@ export default function PreviewPanel({ plan, onBack, onSave, saved }: PreviewPan
           </div>
         </div>
 
+        {/* Adaptable Remedial & Psychological Layer */}
+        {plan.remedialPlan && (
+          <div className="mb-6 p-4 border border-purple-200 bg-purple-50/15 rounded-xl space-y-3.5 print:bg-purple-50/5">
+            <h3 className="text-sm font-bold text-purple-900 flex items-center gap-2 font-display">
+              <span className="text-base">🧬</span>
+              {plan.remedialPlan.title} (الطبقة العلاجية المتغيرة المستجدة)
+            </h3>
+            <p className="text-xs text-slate-700 leading-relaxed font-serif">
+              <strong>التشخيص الطارئ للفجوة اللغوية:</strong> {plan.remedialPlan.targetGap}
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+              <div className="space-y-1.5">
+                <span className="text-xs font-bold text-purple-800 block">🪜 الإجراءات المصاحبة لردم الفجوة:</span>
+                <div className="space-y-1">
+                  {plan.remedialPlan.microPlan.map((act, i) => (
+                    <p key={i} className="text-xs text-slate-700 font-serif leading-relaxed flex items-start gap-1">
+                      <span className="text-purple-600 font-sans">•</span>
+                      <span>{act}</span>
+                    </p>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <span className="text-xs font-bold text-teal-850 block">🎭 التدابير النفسية والتهيئة السلوكية المطبقة:</span>
+                <div className="space-y-1">
+                  {plan.remedialPlan.psychActions.map((item, i) => (
+                    <p key={i} className="text-xs text-slate-700 font-serif leading-relaxed flex items-start gap-1">
+                      <span className="text-teal-600 font-sans">•</span>
+                      <span>{item}</span>
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Tools and Strategies Table card */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div className="border border-slate-200 rounded-xl overflow-hidden shadow-sm">

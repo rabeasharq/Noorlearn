@@ -89,5 +89,73 @@ export const NoorDB = {
       req.onsuccess = () => resolve();
       req.onerror = () => reject(req.error);
     });
+  },
+
+  async exportBackup(): Promise<string> {
+    const plans = await this.getPlans();
+    const profile = await this.getPref("profile");
+    
+    const backupObj = {
+      appName: "NoorArabic",
+      version: "1.0.0",
+      backupDate: new Date().toISOString(),
+      plans,
+      prefs: {
+        profile
+      }
+    };
+    return JSON.stringify(backupObj, null, 2);
+  },
+
+  async importBackup(jsonString: string): Promise<void> {
+    const data = JSON.parse(jsonString);
+    if (!data || typeof data !== "object") {
+      throw new Error("بنية الملف غير صالحة. يجب أن يكون ملف JSON صحيحاً.");
+    }
+    
+    if (data.appName !== "NoorArabic") {
+      throw new Error("عذراً، هذا الملف لا ينتمي لشبكة تحضيرات منظومة نور.");
+    }
+
+    if (!Array.isArray(data.plans)) {
+      throw new Error("ملف النسخة الاحتياطية فارغ أو يحتوي على بيانات خطط تالفة.");
+    }
+
+    const db = await openDB();
+
+    // 1. Restore Plans
+    const txPlans = db.transaction(STORE_PLANS, "readwrite");
+    const storePlans = txPlans.objectStore(STORE_PLANS);
+    
+    await new Promise<void>((resolve, reject) => {
+      const clearReq = storePlans.clear();
+      clearReq.onsuccess = () => resolve();
+      clearReq.onerror = () => reject(clearReq.error);
+    });
+
+    for (const plan of data.plans) {
+      await new Promise<void>((resolve, reject) => {
+        const pCopy = { ...plan };
+        const reqPlan = storePlans.put(pCopy);
+        reqPlan.onsuccess = () => resolve();
+        reqPlan.onerror = () => reject(reqPlan.error);
+      });
+    }
+
+    // 2. Restore Prefs
+    if (data.prefs && typeof data.prefs === "object") {
+      const txPrefs = db.transaction(STORE_PREFS, "readwrite");
+      const storePrefs = txPrefs.objectStore(STORE_PREFS);
+
+      for (const [key, value] of Object.entries(data.prefs)) {
+        if (value !== undefined && value !== null) {
+          await new Promise<void>((resolve, reject) => {
+            const reqPref = storePrefs.put({ key, value });
+            reqPref.onsuccess = () => resolve();
+            reqPref.onerror = () => reject(reqPref.error);
+          });
+        }
+      }
+    }
   }
 };

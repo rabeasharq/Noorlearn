@@ -34,6 +34,7 @@ const EMPTY_FORM: PlanForm = {
   subType: "",
   lessonTitle: "",
   bookUnit: "",
+  bookPages: "",
   day: "",
   period: "",
   date: new Date().toISOString().split("T")[0],
@@ -42,7 +43,10 @@ const EMPTY_FORM: PlanForm = {
   lessonType: "",
   introType: "",
   alphaStrategy: "",
-  classProblems: []
+  classProblems: [],
+  actualProgress: "on_time",
+  psychState: "focus_needed",
+  unexpectedGap: "none",
 };
 
 export default function FormPanel({ onGenerate }: FormPanelProps) {
@@ -233,7 +237,7 @@ export default function FormPanel({ onGenerate }: FormPanelProps) {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-1Block">
                 <label className="text-xs text-slate-400 block mb-1">عنوان موضوع الدرس <span className="text-rose-500">*</span></label>
                 <input
@@ -252,6 +256,17 @@ export default function FormPanel({ onGenerate }: FormPanelProps) {
                   value={form.bookUnit}
                   onChange={e => u("bookUnit", e.target.value)}
                   placeholder="مثال: الوحدة الثالثة: فضائل الأخلاق"
+                  className="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 rounded-xl text-slate-200 text-sm outline-none transition-colors"
+                />
+              </div>
+
+              <div className="space-y-1Block">
+                <label className="text-xs text-slate-400 block mb-1">صفحات الكتاب المدرسي المرتبطة</label>
+                <input
+                  type="text"
+                  value={form.bookPages}
+                  onChange={e => u("bookPages", e.target.value)}
+                  placeholder="مثال: ص 14 أو ص 22 - ص 25"
                   className="w-full px-4 py-3 bg-slate-950/60 border border-slate-800 focus:border-amber-400 focus:ring-1 focus:ring-amber-400 rounded-xl text-slate-200 text-sm outline-none transition-colors"
                 />
               </div>
@@ -476,6 +491,110 @@ export default function FormPanel({ onGenerate }: FormPanelProps) {
       {/* ── TAB CONTENT: CLASSROOM ── */}
       {activeTab === "classroom" && (
         <div className="space-y-6 animate-fade-in">
+          {/* JUST-IN-TIME CLASSROOM STATE PANEL */}
+          <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-5">
+            <div>
+              <h4 className="text-[15px] font-bold text-amber-400 mb-1 flex items-center gap-2">
+                <span className="text-lg">⚡</span>
+                مدخلات المعلم اللحظية وحالة الفصل الآنية (الضبط للتوليد المرن)
+              </h4>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                تخصيص الخطة بشكل ديناميكي بناءً على وتيرة الفصل الحالية والمستوى السني والنفسي لجيل ألفا ومراعاة الفجوات المعرفية.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+              {/* Actual Progress Rate */}
+              <div className="space-y-2">
+                <label className="text-xs text-slate-300 font-bold block">معدل التقدم الفعلي للفصل</label>
+                <div className="flex flex-col gap-2 pt-1">
+                  {[
+                    { key: "ahead", label: "متقدم عن الجدول (إثراء)", desc: "زيادة حجم التطبيق الإبداعي والبدائل" },
+                    { key: "on_time", label: "ملتزم بالخطة الزمنية (متوازن)", desc: "سير منطقي عادي للمنهج" },
+                    { key: "behind", label: "متأخر / يحتاج لإبطاء الوتيرة", desc: "تمديد وقت الاستنباط وتخفيف المعارك المعرفية" }
+                  ].map(opt => {
+                    const active = form.actualProgress === opt.key;
+                    return (
+                      <button
+                        key={opt.key}
+                        type="button"
+                        onClick={() => u("actualProgress", opt.key as any)}
+                        className={`text-right p-3 rounded-xl border transition-all text-xs cursor-pointer flex flex-col ${
+                          active
+                            ? "bg-amber-400/5 border-amber-400 text-amber-300 shadow-sm"
+                            : "bg-slate-950 border-slate-900 text-slate-400 hover:border-slate-850 hover:text-slate-200"
+                        }`}
+                      >
+                        <span className="font-bold mb-0.5">{opt.label}</span>
+                        <span className="opacity-80 text-[10px] leading-snug">{opt.desc}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Psychological & Engagement State */}
+              <div className="space-y-2">
+                <label className="text-xs text-slate-300 font-bold block">حالة التهيئة النفسية الحالية</label>
+                <div className="flex flex-col gap-2 pt-1">
+                  {[
+                    { key: "low_engage", label: "مشاركة منخفضة (ضعف انتباه)", desc: "تفعيل ألعاب وعجلة الحظ اللغوية" },
+                    { key: "high_energy", label: "طاقة زائدة (فرط نشاط)", desc: "تخصيص أنشطة كتابية هائلة صامتة" },
+                    { key: "fatigue", label: "خمول / تعب ما بعد امتحانات", desc: "تهدئة النفس بقصة لغوية وجدانية" },
+                    { key: "focus_needed", label: "تنشيط التركيز والانتباه", desc: "تحدي الثواني السبع ووميض الملاحظة" }
+                  ].map(opt => {
+                    const active = form.psychState === opt.key;
+                    return (
+                      <button
+                        key={opt.key}
+                        type="button"
+                        onClick={() => u("psychState", opt.key as any)}
+                        className={`text-right p-3 rounded-xl border transition-all text-xs cursor-pointer flex flex-col ${
+                          active
+                            ? "bg-teal-400/5 border-teal-400 text-teal-300 shadow-sm"
+                            : "bg-slate-950 border-slate-900 text-slate-400 hover:border-slate-850 hover:text-slate-200"
+                        }`}
+                      >
+                        <span className="font-bold mb-0.5">{opt.label}</span>
+                        <span className="opacity-80 text-[10px] leading-snug">{opt.desc}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Unexpected Capacity Difference */}
+              <div className="space-y-2">
+                <label className="text-xs text-slate-300 font-bold block">فارق القدرات غير المتوقع</label>
+                <div className="flex flex-col gap-2 pt-1">
+                  {[
+                    { key: "none", label: "تكامل طبيعي مستقر", desc: "متابعة النمط المعتاد دون تدخلات طارئة" },
+                    { key: "prereq_gaps", label: "فجوات بالمتطلبات السابقة", desc: "إدراج 4 دقائق ميكرو-علاجية لردم الفرق" },
+                    { key: "high_variance", label: "تفاوت مرتفع بالمستويات", desc: "مصفوفة المهام الثلاثية وتفعيل الأقران" },
+                    { key: "heavy_remedial", label: "حاجة لتدخل علاجي دائم وطارئ", desc: "تجميد الحشو المعقد وصيانة الإعراب والإملاء" }
+                  ].map(opt => {
+                    const active = form.unexpectedGap === opt.key;
+                    return (
+                      <button
+                        key={opt.key}
+                        type="button"
+                        onClick={() => u("unexpectedGap", opt.key as any)}
+                        className={`text-right p-3 rounded-xl border transition-all text-xs cursor-pointer flex flex-col ${
+                          active
+                            ? "bg-purple-400/5 border-purple-400 text-purple-300 shadow-sm"
+                            : "bg-slate-950 border-slate-900 text-slate-400 hover:border-slate-850 hover:text-slate-200"
+                        }`}
+                      >
+                        <span className="font-bold mb-0.5">{opt.label}</span>
+                        <span className="opacity-80 text-[10px] leading-snug">{opt.desc}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Group differences checklists */}
           <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4">
             <h4 className="text-[15px] font-bold text-slate-200 mb-2 flex items-center gap-2">

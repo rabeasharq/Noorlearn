@@ -171,6 +171,18 @@ export function exportWord(plan: ArabicPlan): void {
 <h2>التمهيد وإثارة الفضول المعرفي: ${plan.introLabel}</h2>
 <div class="box">${plan.introEx}</div>
 
+${plan.remedialPlan ? `
+<h2>${plan.remedialPlan.title} (الطبقة العلاجية المتغيرة المستجدة)</h2>
+<div class="box" style="background-color: #faf5ff; border: 1px solid #c084fc;">
+  <strong style="color: #581c87;">التشخيص الطارئ للفجوة اللغوية:</strong> ${plan.remedialPlan.targetGap}
+  <br/><br/>
+  <strong style="color: #581c87;">🪜 الإجراءات المصاحبة لردم الفجوة:</strong><br/>
+  ${plan.remedialPlan.microPlan.map(x => "• " + x).join("<br/>")}
+  <br/><br/>
+  <strong style="color: #0f766e;">🎭 التدابير النفسية والتهيئة السلوكية المطبقة:</strong><br/>
+  ${plan.remedialPlan.psychActions.map(x => "• " + x).join("<br/>")}
+</div>` : ""}
+
 <h2>الوسائل التعليمية والاستراتيجيات التدريسية</h2>
 <table>
   <thead>
