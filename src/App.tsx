@@ -16,6 +16,7 @@ import FeedbackPanel from "./components/FeedbackPanel";
 import GuidePanel from "./components/GuidePanel";
 import PreviewPanel from "./components/PreviewPanel";
 import BackupPanel from "./components/BackupPanel";
+import SemesterPlanner from "./components/SemesterPlanner";
 
 import { motion, AnimatePresence } from "motion/react";
 
@@ -159,6 +160,7 @@ export default function App() {
   const panelTitles: Record<string, string> = {
     form: "صياغة خطة تحضيرية جديدة",
     history: `الأرشيف ودليل خططي الدراسية (${plans.length})`,
+    semester: "بوابة التخطيط الفصلي والرسمي لمدارس اليمن",
     feedback: "التحليلات ومستوى التنوع التراكمي",
     backup: "إدارة البيانات والنسخ الاحتياطي للأرشيف",
     guide: "دليل منظومة نور ومناهج اللغة العربية"
@@ -246,6 +248,7 @@ export default function App() {
                   />
                 )}
                 {view === "feedback" && <FeedbackPanel plans={plans} />}
+                {view === "semester" && <SemesterPlanner />}
                 {view === "backup" && (
                   <BackupPanel onImportSuccess={reloadAllData} plansCount={plans.length} />
                 )}

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BookOpen, FolderOpen, BarChart3, HelpCircle, Database } from "lucide-react";
+import { BookOpen, FolderOpen, BarChart3, HelpCircle, Database, Calendar } from "lucide-react";
 import { APP_NAME, APP_VERSION } from "../types";
 
 interface SidebarProps {
@@ -16,6 +16,7 @@ export default function Sidebar({ view, setView, plansCount }: SidebarProps) {
   const nav = [
     { key: "form", icon: <BookOpen className="w-5 h-5" />, label: "تحضير جديد" },
     { key: "history", icon: <FolderOpen className="w-5 h-5" />, label: "خططي الدراسية", count: plansCount },
+    { key: "semester", icon: <Calendar className="w-5 h-5" />, label: "التخطيط الفصلي" },
     { key: "feedback", icon: <BarChart3 className="w-5 h-5" />, label: "التغذية الراجعة" },
     { key: "backup", icon: <Database className="w-5 h-5" />, label: "إدارة النسخ الاحتياطي" },
     { key: "guide", icon: <HelpCircle className="w-5 h-5" />, label: "دليل الاستخدام" },
