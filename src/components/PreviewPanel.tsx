@@ -80,6 +80,28 @@ export default function PreviewPanel({ plan, onBack, onSave, saved }: PreviewPan
         className="max-w-4xl mx-auto my-6 p-8 bg-white text-slate-900 border border-slate-100 shadow-2xl rounded-2xl print:shadow-none print:border-none print:m-0 print:p-0 font-serif"
         dir="rtl"
       >
+        {/* Official Governmental Header of Yemen */}
+        <div className="border-b-4 border-double border-slate-900 pb-5 mb-6 flex flex-row items-center justify-between gap-4 font-serif">
+          <div className="w-1/3 text-right text-xs space-y-1 font-bold text-slate-800 leading-relaxed">
+            <p className="text-sm font-black text-slate-900">الجمهورية اليمنية</p>
+            <p>وزارة التربية والتعليم</p>
+            <p>مكتب التربية والتعليم بمحافظة الأمانة</p>
+            {m.schoolName && <p>مدرسة: {m.schoolName}</p>}
+          </div>
+
+          <div className="w-1/3 flex flex-col items-center text-center justify-center">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 mb-1">الخطة الدراسية السنوية</h1>
+            <strong className="text-xs text-slate-800 font-bold block">وزارة التربية والتعليم</strong>
+            <span className="text-[10px] text-slate-500 block">منظومة نور للتوجيه والتحضير</span>
+          </div>
+
+          <div className="w-1/3 text-left text-xs space-y-1 font-semibold text-slate-800 leading-relaxed font-sans">
+            <p>التاريخ: <span className="font-bold text-slate-900">{m.date || new Date().toLocaleDateString("ar-YE")}</span></p>
+            <p>الصف: <span className="font-bold text-slate-900">{m.grade}</span></p>
+            <p>المادة: <span className="font-bold text-slate-900">{m.subject}</span></p>
+          </div>
+        </div>
+
         {/* Document Frame Header Banner */}
         <div
           className="p-6 text-white rounded-xl mb-6 relative overflow-hidden"

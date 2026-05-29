@@ -848,8 +848,10 @@ export default function SemesterPlanner() {
                   مكتب الإشراف والتوجيه التربوي بالمديرية
                 </div>
               </td>
-              <td class="header-cell crest-cell">
-                <div class="emblem-sim">🦅</div>
+              <td class="header-cell crest-cell" style="vertical-align: middle; text-align: center;">
+                <div style="font-family: 'Amiri', serif; font-size: 1.4rem; font-weight: bold; margin-bottom: 5px; color: #000;">
+                  الخطة الدراسية السنوية
+                </div>
                 <strong>وزارة التربية والتعليم</strong><br/>
                 <span class="org-sub">منظومة نور المتطورة للتخطيط والتحضير</span>
               </td>
